@@ -2,6 +2,8 @@
 
 This repository was created to practice with Docker and Docker compose.
 
+The project implements Continuous Integration using Travis CI.
+
 ## Instructions
 
 To run the project for the first time, run
