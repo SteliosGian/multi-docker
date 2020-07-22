@@ -1,0 +1,24 @@
+sudo: required
+language: generic
+services:
+  - docker
+
+before_install:
+  - docker build -t steliosgian/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true steliosgian/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t steliosgian/multi-client ./client
+  - docker build -t steliosgian/multi-nginx ./nginx
+  - docker build -t steliosgian/multi-server ./server
+  - docker build -t steliosgian/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push steliosgian/multi-client
+  - docker push steliosgian/multi-nginx
+  - docker push steliosgian/multi-server
+  - docker push steliosgian/multi-worker
+
